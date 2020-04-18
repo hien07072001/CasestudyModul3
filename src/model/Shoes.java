@@ -1,7 +1,7 @@
 package model;
 
 public class Shoes {
-    private int id;
+    private int shoes_id;
     private String image_link;
     private String name_shoes;
     private float price;
@@ -11,15 +11,28 @@ public class Shoes {
     public Shoes() {
     }
 
-    public Shoes(int id, String image_link, String name_shoes, float price) {
-        this.id = id;
+    public Shoes(String image_link, String name_shoes, float price) {
+        this.image_link = image_link;
+        this.name_shoes = name_shoes;
+        this.price = price;
+    }
+
+    public Shoes(int shoes_id, String image_link, String name_shoes, float price) {
+        this.shoes_id =shoes_id;
         this.image_link=image_link;
         this.name_shoes = name_shoes;
         this.price = price;
 
     }
-    public Shoes(int id, String image_link, String name_shoes, float price, String trademark, String status){
-        this.id = id;
+    public Shoes( String image_link, String name_shoes, float price, String trademark, String status){
+        this.image_link=image_link;
+        this.name_shoes= name_shoes;
+        this.price = price;
+        this.trademark = trademark;
+        this.status = status;
+    }
+    public Shoes(int shoes_id, String image_link, String name_shoes, float price, String trademark, String status){
+        this.shoes_id = shoes_id;
         this.image_link=image_link;
         this.name_shoes= name_shoes;
         this.price = price;
@@ -27,12 +40,13 @@ public class Shoes {
         this.status = status;
     }
 
-    public int getId() {
-        return id;
+
+    public int getShoes_id() {
+        return shoes_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setShoes_id(int shoes_id) {
+        this.shoes_id= shoes_id;
     }
 
     public String getImage_link() {

@@ -1,10 +1,10 @@
 package service;
 
 import model.CategoryShoes;
+import model.Shoes;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryImpl implements ICategory {
@@ -12,11 +12,10 @@ public class CategoryImpl implements ICategory {
     private String jdbcUsername = "root";
     private String jdbcPassword = "123456";
 
-    private static final String SELECT_ALL = "select *from info_Shose";
-    private static final String INSERT_INFO_SHOES = "insert into info_Shose (trademark,status)values(?,?)";
-    private static final String UPDATE_INFO_SHOES = "update info_Shose set info_Shose = ?";
-    private static final String DELETE_INFO_SHOES = "delete from info_Shose where id = ?";
-
+    private static final String SELECT_ALL = "select *from CategoryShoes";
+    private static final String INSERT_CategoryShoes = "insert into CategoryShoes (trademark,status)values(?,?)";
+    private static final String UPDATE_CategoryShoes = "update CategoryShoes set CategoryShoes = ?";
+    private static final String DELETE_CategoryShoes = "delete from CategoryShoes where id = ?";
 
 
     protected Connection getConnection() {
@@ -31,26 +30,66 @@ public class CategoryImpl implements ICategory {
         }
         return connection;
     }
-    
 
 
     @Override
     public List<CategoryShoes> findAll() {
-        return null;
+
+        List<CategoryShoes> categories = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String trademark = resultSet.getString("trademark");
+                String status = resultSet.getString("status");
+
+                categories.add(new CategoryShoes(trademark, status));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
     }
 
     @Override
-    public void insert(CategoryShoes categoryShose) throws Exception {
+    public void insert(CategoryShoes categoryShoes) throws Exception {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT_CategoryShoes)) {
+            statement.setString(1, categoryShoes.getTrademark());
+            statement.setString(2, categoryShoes.getStatus());
+            System.out.println(statement);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
-    public boolean update(int id, CategoryShoes categoryShose) throws SQLException {
-        return false;
+    public boolean updateCategory(CategoryShoes categoryShoes) throws SQLException {
+        boolean rowUpdated;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_CategoryShoes);) {
+            statement.setString(1, categoryShoes.getTrademark());
+            statement.setString(2, categoryShoes.getStatus());
+            statement.setInt(3, categoryShoes.getId());
+
+            rowUpdated = statement.executeUpdate() > 0;
+        }
+        return rowUpdated;
     }
 
     @Override
-    public boolean delete(int id) throws SQLException {
-        return false;
+    public boolean deleteCategory(int id) throws SQLException {
+        boolean rowDeleted;
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_CategoryShoes);) {
+             statement.setInt(1, id);
+
+             rowDeleted = statement.executeUpdate() > 0;
+        }
+        return rowDeleted;
     }
 }

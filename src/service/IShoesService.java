@@ -11,9 +11,9 @@ public interface IShoesService {
 
     public void insert(Shoes shoes) throws SQLException;
 
-    public  List<Shoes> FindByCategoryID(int id);
+    public  List<Shoes> FindByCategoryShoes();
 
-    public  boolean update(int id, Shoes shoes) throws SQLException;
+    public  boolean update( Shoes shoes) throws SQLException;
 
-    public  boolean delete(int id) throws SQLException;
+    public  boolean delete(int shoes_id) throws SQLException;
 }

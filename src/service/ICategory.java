@@ -11,8 +11,8 @@ public interface ICategory {
 
     public  void  insert(CategoryShoes categoryShoes) throws Exception;
 
-    public boolean update(int id, CategoryShoes categoryShoes) throws SQLException;
+    public boolean updateCategory( CategoryShoes categoryShoes) throws SQLException;
 
-    public boolean delete(int id) throws SQLException;
+    public boolean deleteCategory(int id) throws SQLException;
 
 }
