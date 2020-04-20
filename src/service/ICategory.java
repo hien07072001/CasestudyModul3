@@ -15,4 +15,8 @@ public interface ICategory {
 
     public boolean deleteCategory(int id) throws SQLException;
 
+    public List<CategoryShoes> findByCategoryTrademark(String trademark) throws SQLException;
+
+
+
 }

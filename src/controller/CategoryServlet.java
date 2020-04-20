@@ -4,6 +4,8 @@ import model.CategoryShoes;
 import model.Shoes;
 import service.CategoryImpl;
 import service.ICategory;
+import service.IShoesService;
+import service.ShoesIpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +20,8 @@ import java.util.List;
 @WebServlet(name = "CategoryServlet", urlPatterns = "/category")
 
 public class CategoryServlet extends HttpServlet {
-    private ICategory CategoryService = new CategoryImpl();
+    private ICategory categoryService = new CategoryImpl();
+    private IShoesService shoesService = new ShoesIpl();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -72,11 +75,15 @@ public class CategoryServlet extends HttpServlet {
                 break;
         }
     }
+    private List<Shoes> listShoes(){
+        return this.shoesService.findAll();
+    }
+
     private void createCategory(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String trademark = request.getParameter("trademark");
         String status = request.getParameter("status");
         CategoryShoes categoryShoes = new CategoryShoes(trademark, status);
-        this.CategoryService.insert(categoryShoes);
+        this.categoryService.insert(categoryShoes);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("category/create_category.jsp");
         request.setAttribute("message", "Tạo mới không thành công");
@@ -93,16 +100,15 @@ public class CategoryServlet extends HttpServlet {
         String status = request.getParameter("status");
 
         CategoryShoes categoryShoes = new CategoryShoes(id, trademark, status);
-        this.CategoryService.updateCategory(categoryShoes);
+        this.categoryService.updateCategory(categoryShoes);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("category/edit_category.jsp");
         requestDispatcher.forward(request, response);
     }
 
     private void showDeleteCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
-        this.CategoryService.deleteCategory(id);
-
-        List<CategoryShoes> categories = this.CategoryService.findAll();
+        this.categoryService.deleteCategory(id);
+        List<CategoryShoes> categories = this.categoryService.findAll();
         request.setAttribute("listCategory", categories);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("category/list_category.jsp");
         requestDispatcher.forward(request, response);
@@ -116,8 +122,10 @@ public class CategoryServlet extends HttpServlet {
     }
 
     private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<CategoryShoes> categoryList = this.CategoryService.findAll();
+        List<CategoryShoes> categoryList = this.categoryService.findAll();
+        List<Shoes> shoes = listShoes();
         request.setAttribute("listCategory", categoryList);
+        request.setAttribute("shoes",shoes);
         RequestDispatcher dispatcher = request.getRequestDispatcher("category/list_category.jsp");
         dispatcher.forward(request, response);
 

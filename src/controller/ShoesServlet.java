@@ -56,6 +56,7 @@ public class ShoesServlet extends HttpServlet {
         if (action == null) {
             action = "";
         }
+
         switch (action) {
             case "create_shoes":
                 showCreateShoes(request, response);
@@ -70,12 +71,23 @@ public class ShoesServlet extends HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "findByPrice":
+                findByClothingPrice(request, response);
+                break;
+
             default:
                 listShoes(request, response);
                 break;
         }
-
     }
+
+    private void findByClothingPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Shoes> shoes = this.ShoesService.findAll();
+        request.setAttribute("shoes", shoes);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("shoes/list_shoes.jsp");
+        requestDispatcher.forward(request, response);
+    }
+
     private void editShoes(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int shoes_id=Integer.parseInt(request.getParameter("id"));
         String image_link=request.getParameter("image");
@@ -89,8 +101,6 @@ public class ShoesServlet extends HttpServlet {
 
 
     }
-
-
     private void DeleteShoes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ServletException, SQLException {
         int shoes_id = Integer.parseInt(request.getParameter("id"));
         this.ShoesService.delete(shoes_id);

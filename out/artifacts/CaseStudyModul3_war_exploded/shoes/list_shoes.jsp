@@ -18,11 +18,7 @@
 </p>
 <div>
     <form method="get" action="${pageContext.request.contextPath}/shoes?action=list_shoes">
-<%--        <select name="country">--%>
-<%--            <c:forEach items='${requestScope["countries"]}' var="country">--%>
-<%--                <option value="${country.getId()}">${country.getName()}</option>--%>
-<%--            </c:forEach>--%>
-<%--        </select>--%>
+
         <button type="submit" name="action" value="search">Tìm kiếm</button>
     </form>
 </div>

@@ -16,4 +16,6 @@ public interface IShoesService {
     public  boolean update( Shoes shoes) throws SQLException;
 
     public  boolean delete(int shoes_id) throws SQLException;
+
+    public List<Shoes> findByPrice(int price) throws SQLException;
 }

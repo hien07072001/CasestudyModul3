@@ -14,7 +14,7 @@ public class CategoryImpl implements ICategory {
 
     private static final String SELECT_ALL = "select *from CategoryShoes";
     private static final String INSERT_CategoryShoes = "insert into CategoryShoes (trademark,status)values(?,?)";
-    private static final String UPDATE_CategoryShoes = "update CategoryShoes set CategoryShoes = ?";
+    private static final String UPDATE_CategoryShoes = "update CategoryShoes set trademark = ?, status = ? where id = ?";
     private static final String DELETE_CategoryShoes = "delete from CategoryShoes where id = ?";
 
 
@@ -23,9 +23,7 @@ public class CategoryImpl implements ICategory {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return connection;
@@ -43,8 +41,9 @@ public class CategoryImpl implements ICategory {
             while (resultSet.next()) {
                 String trademark = resultSet.getString("trademark");
                 String status = resultSet.getString("status");
+                int id = resultSet.getInt("id");
 
-                categories.add(new CategoryShoes(trademark, status));
+                categories.add(new CategoryShoes(id, trademark, status));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,11 +69,11 @@ public class CategoryImpl implements ICategory {
     @Override
     public boolean updateCategory(CategoryShoes categoryShoes) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_CategoryShoes);) {
+        try(Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_CategoryShoes)) {
             statement.setString(1, categoryShoes.getTrademark());
-            statement.setString(2, categoryShoes.getStatus());
-            statement.setInt(3, categoryShoes.getId());
+            statement.setString(2,categoryShoes.getStatus());
+            statement.setInt(3,categoryShoes.getId());
 
             rowUpdated = statement.executeUpdate() > 0;
         }
@@ -92,4 +91,23 @@ public class CategoryImpl implements ICategory {
         }
         return rowDeleted;
     }
+
+    @Override
+    public List<CategoryShoes> findByCategoryTrademark(String trademark) throws SQLException {
+        List<CategoryShoes> categoryList = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("select * from CategoryShoes where CategoryShoes_trademark = ?");) {
+            statement.setString(1, trademark);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String status = resultSet.getString(2);
+
+                CategoryShoes category = new CategoryShoes(id, trademark, status);
+                categoryList.add(category);
+            }
+        }
+        return categoryList;
+    }
+
 }
