@@ -10,13 +10,27 @@
 <html>
 <head>
     <title style="text-align: center">Shoes Manager</title>
+    <style>
+        .sho a {
+            float: left;
+            display: block;
+            color: #FF82AB;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+<center>
+<h1>Shoes</h1>
+<div class="sho">
+    <a href="${pageContext.request.contextPath}/shoes">Home</a>
 
-<h1 style="text-align: center">Shoes</h1>
-<h2>
     <a style="text-align: center" href="shoes?action=list_shoes">List All Shoes</a>
-</h2>
+</div>
+</center>
+
 
 <div align="center">
     <form method="post">
@@ -29,18 +43,18 @@
             <tr>
                 <th>Image:</th>
                 <td>
-                    <input type="text" name="image" size="45"/>
+                    <input type="text" name="image" size="100"/>
                 </td>
             </tr>
             <tr>
                 <th>Name:</th>
                 <td>
-                    <input type="text" name="name" size="45"/>
+                    <input type="text" name="name" size="100"/>
                 </td>
             </tr><tr>
             <th>Price:</th>
             <td>
-                <input type="text" name="price" size="45"/>
+                <input type="text" name="price" size="100"/>
             </td>
         </tr>
             <tr>

@@ -32,6 +32,15 @@ public class Shoes {
 
     }
 
+    public Shoes(int shoes_id, String image_link, String name_shoes, float price, String trademark, String status) {
+        this.shoes_id = shoes_id;
+        this.image_link = image_link;
+        this.name_shoes = name_shoes;
+        this.price = price;
+        this.trademark = trademark;
+        this.status = status;
+    }
+
     public int getShoes_id() {
         return shoes_id;
     }

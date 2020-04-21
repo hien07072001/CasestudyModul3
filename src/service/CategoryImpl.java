@@ -69,11 +69,11 @@ public class CategoryImpl implements ICategory {
     @Override
     public boolean updateCategory(CategoryShoes categoryShoes) throws SQLException {
         boolean rowUpdated;
-        try(Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_CategoryShoes)) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_CategoryShoes)) {
             statement.setString(1, categoryShoes.getTrademark());
-            statement.setString(2,categoryShoes.getStatus());
-            statement.setInt(3,categoryShoes.getId());
+            statement.setString(2, categoryShoes.getStatus());
+            statement.setInt(3, categoryShoes.getId());
 
             rowUpdated = statement.executeUpdate() > 0;
         }
@@ -85,29 +85,35 @@ public class CategoryImpl implements ICategory {
         boolean rowDeleted;
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_CategoryShoes);) {
-             statement.setInt(1, id);
+            statement.setInt(1, id);
 
-             rowDeleted = statement.executeUpdate() > 0;
+            rowDeleted = statement.executeUpdate() > 0;
         }
         return rowDeleted;
     }
 
     @Override
-    public List<CategoryShoes> findByCategoryTrademark(String trademark) throws SQLException {
-        List<CategoryShoes> categoryList = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("select * from CategoryShoes where CategoryShoes_trademark = ?");) {
-            statement.setString(1, trademark);
+    public List<CategoryShoes> findByStatus(String status) throws SQLException {
+        List<CategoryShoes> categoryShoes = new ArrayList<>();
+        String findPriceStatement = "select * from productManager.CategoryShoes cs where cs.status = ?";
+
+        try (
+                Connection connection = getConnection();
+                PreparedStatement statement = connection.prepareStatement(findPriceStatement);
+        ) {
+            statement.setString(1, status);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
-                String status = resultSet.getString(2);
+                String trademark = resultSet.getString(2);
 
-                CategoryShoes category = new CategoryShoes(id, trademark, status);
-                categoryList.add(category);
+                CategoryShoes categoryShoes1 = new CategoryShoes(id, trademark, status);
+                categoryShoes.add(categoryShoes1);
             }
         }
-        return categoryList;
-    }
 
+
+        return categoryShoes;
+    }
 }
+

@@ -3,14 +3,27 @@
 <html>
 <head>
     <title>Create new Shoes</title>
+    <style>
+        .sho a {
+            float: left;
+            display: block;
+            color: #FF82AB;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+<center>
+    <h1 style="text-align: center">Shoes Management</h1>
+    <div>
+        <a href="${pageContext.request.contextPath}/shoes">Home</a>
 
-<h1 style="text-align: center">Shoes Management</h1>
-<h2>
-    <a href="${pageContext.request.contextPath}/shoes?action=list_shoes">List All shoes</a>
-</h2>
+        <a href="${pageContext.request.contextPath}/shoes?action=list_shoes">List All shoes</a>
+    </div>
 
+</center>
 <div align="center">
     <form method="post">
         <table border="1" cellpadding="5">
@@ -35,17 +48,6 @@
                     <input type="text" name="price" id="price" size="45"/>
                 </td>
             </tr>
-<%--            <tr>--%>
-<%--                <th>--%>
-
-<%--                </th>Select a Category:&nbsp;--%>
-<%--                <select name="category">--%>
-<%--                    <c:forEach items="${listCategory}" var="category">--%>
-<%--                        <option value="${category.id}">${category.name}</option>--%>
-<%--                    </c:forEach>--%>
-<%--                </select>--%>
-<%--                <br/><br/>--%>
-<%--            </tr>--%>
             <tr>
                 <td colspan="2" align="center">
                     <input type="submit" value="Save"/>

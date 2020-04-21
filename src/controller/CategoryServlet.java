@@ -53,6 +53,14 @@ public class CategoryServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
+        String status = request.getParameter("status");
+        if (status != null){
+            try {
+                findByStatus(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         if (action == null) {
             action = "";
         }
@@ -70,11 +78,32 @@ public class CategoryServlet extends HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "findByStatus":
+                try {
+                    findByStatus(request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 listCategory(request, response);
                 break;
         }
     }
+
+    private void findByStatus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        String status =request.getParameter("status");
+        List<CategoryShoes> categoryList = this.categoryService.findByStatus(status);
+        RequestDispatcher requestDispatcher;
+        if (categoryList == null){
+            requestDispatcher = request.getRequestDispatcher("error-404.jsp");
+        }else {
+            request.setAttribute("listCategory", categoryList);//truyền tên biến tìm kiếm giống tên list quần áo
+            requestDispatcher = request.getRequestDispatcher("category/list_category.jsp");
+            requestDispatcher.forward(request, response);
+        }
+    }
+
     private List<Shoes> listShoes(){
         return this.shoesService.findAll();
     }
@@ -123,9 +152,7 @@ public class CategoryServlet extends HttpServlet {
 
     private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<CategoryShoes> categoryList = this.categoryService.findAll();
-        List<Shoes> shoes = listShoes();
         request.setAttribute("listCategory", categoryList);
-        request.setAttribute("shoes",shoes);
         RequestDispatcher dispatcher = request.getRequestDispatcher("category/list_category.jsp");
         dispatcher.forward(request, response);
 

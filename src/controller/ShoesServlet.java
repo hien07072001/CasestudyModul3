@@ -53,11 +53,17 @@ public class ShoesServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = request.getParameter("action");
-        if (action == null) {
-            action = "";
+        String price = request.getParameter("price");
+        if (price != null){
+            try {
+                findByShoesPrice(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-        switch (action) {
+
+        switch (action != null ? action : "") {
             case "create_shoes":
                 showCreateShoes(request, response);
                 break;
@@ -71,21 +77,41 @@ public class ShoesServlet extends HttpServlet {
                     e.printStackTrace();
                 }
                 break;
+            case "list_shoes":
+                showListShoes(request, response);
+                break;
             case "findByPrice":
-                findByClothingPrice(request, response);
+                try {
+                    findByShoesPrice(request, response);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             default:
-                listShoes(request, response);
+                listShoesCategory(request, response);
                 break;
         }
     }
 
-    private void findByClothingPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Shoes> shoes = this.ShoesService.findAll();
-        request.setAttribute("shoes", shoes);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("shoes/list_shoes.jsp");
-        requestDispatcher.forward(request, response);
+    private void showListShoes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Shoes> shoesList = this.ShoesService.findAll();
+        request.setAttribute("listShoes", shoesList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("shoes/list_shoes.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void findByShoesPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        float price = Float.parseFloat(request.getParameter("price"));
+        List<Shoes> shoesList = this.ShoesService.findByPrice(price);
+        RequestDispatcher requestDispatcher;
+        if (shoesList == null){
+            requestDispatcher = request.getRequestDispatcher("error-404.jsp");
+        }else {
+            request.setAttribute("listShoes", shoesList);//truyền tên biến tìm kiếm giống tên list quần áo
+            requestDispatcher = request.getRequestDispatcher("shoes/list_shoes.jsp");
+            requestDispatcher.forward(request, response);
+        }
     }
 
     private void editShoes(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
@@ -117,11 +143,15 @@ public class ShoesServlet extends HttpServlet {
         requestDispatcher.forward(request,response);
 
     }
-    private void listShoes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Shoes> shoesList = this.ShoesService.findAll();
-        request.setAttribute("listShoes", shoesList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("shoes/list_shoes.jsp");
-        dispatcher.forward(request, response);
+    private void listShoesCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Shoes> shoesList = this.ShoesService.FindByCategoryShoes();
+        request.setAttribute("shoes",shoesList);
+
+//        List<String> statuses = this.ShoesService.FindByCategoryShoes();
+//        request.setAttribute("statuses", statuses);
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("home/Category_shoes.jsp");
+        requestDispatcher.forward(request, response);
 
     }
 

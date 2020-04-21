@@ -10,13 +10,25 @@
 <html>
 <head>
     <title>Title</title>
+    <style>
+        .sho a {
+            float: left;
+            display: block;
+            color: #FF82AB;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
 <center>
     <h1>CategoryShoes</h1>
-    <h2>
+    <div class="sho">
+        <a href="${pageContext.request.contextPath}/shoes">Home</a>
+
         <a href="category?action=list_category">List All Category</a>
-    </h2>
+    </div>
 </center>
 <div align="center">
     <form method="post">

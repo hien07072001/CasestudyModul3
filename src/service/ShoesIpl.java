@@ -52,9 +52,6 @@ public class ShoesIpl implements IShoesService {
         }
         return shoes;
     }
-
-
-
     @Override
     public void insert(Shoes shoes) throws SQLException {
         System.out.println(INSERT_SHOES_SQL);
@@ -68,13 +65,12 @@ public class ShoesIpl implements IShoesService {
         } catch (SQLException e) {
             printSQLException(e);
         }
-
     }
 
     @Override
     public List<Shoes> FindByCategoryShoes() {
         List<Shoes> shoesCategory = new ArrayList<>();
-        String selectAll = ";";
+        String selectAll = "SELECT *from productManager.shoes inner join CategoryShoes CS on shoes.shoes_id = CS.shoes_id;";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(selectAll)) {
@@ -87,38 +83,13 @@ public class ShoesIpl implements IShoesService {
                 String trademark = resultSet.getString("trademark");
                 String status = resultSet.getString("status");
 
-                shoesCategory.add(new Shoes(image_link, name_shoes, price, trademark, status));
+                shoesCategory.add(new Shoes(shoes_id,image_link, name_shoes, price, trademark, status));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return shoesCategory;
     }
-
-//    @Override
-////    public List<Shoes> FindByCategoryShoes() {
-////        List<Shoes> CategoryShoes = new ArrayList<>();
-////        String selectAll = "SELECT cl.id, ca.category_name, ca.status, cl.name, cl.description, cl.picture, cl.price, cl.origin\n" +
-////                "FROM category as ca INNER JOIN clothing cl on cl.category_id = ca.category_id;";
-////
-////        try (Connection connection = getConnection();
-////             PreparedStatement statement = connection.prepareStatement(selectAll)) {
-////            ResultSet resultSet = statement.executeQuery();
-////            while (resultSet.next()) {
-////                String image_link = resultSet.getString("image_link");
-////                String name_shoes = resultSet.getString("shoes");
-////                float price = Float.parseFloat(resultSet.getString("price"));
-////                String trademark = resultSet.getString("trademark");
-////                String status = resultSet.getString("status");
-////
-////                CategoryShoes.add(new Shoes(image_link,name_shoes,price,trademark,status));
-////            }
-////        } catch (SQLException e) {
-////            e.printStackTrace();
-////        }
-////        return CategoryShoes;
-////    }
-
     @Override
     public boolean update( Shoes shoes) throws SQLException {
         boolean rowUpdated;
@@ -150,15 +121,15 @@ public class ShoesIpl implements IShoesService {
     }
 
     @Override
-    public List<Shoes> findByPrice(int price) throws SQLException {
+    public List<Shoes> findByPrice(float price) throws SQLException {
         List<Shoes> shoesList = new ArrayList<>();
-        String findPriceStatement = "select * from productManager.shoes sh where sh.price = ?";
+        String findPriceStatement = "select * from productManager.shoes s where s.price = ?";
 
         try (
                 Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(findPriceStatement);
         ) {
-            statement.setInt(1, price);
+            statement.setFloat(1, price);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int shoes_id = resultSet.getInt(1);
@@ -171,7 +142,6 @@ public class ShoesIpl implements IShoesService {
         }
         return shoesList;
     }
-
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
